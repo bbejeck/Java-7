@@ -1,0 +1,11 @@
+target/
+.idea/*
+*.iml
+*.ipr
+*.iws
+.idea/libraries
+test-files
+test-source-dir
+test-target-dir
+test.txt
+
