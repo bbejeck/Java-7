@@ -113,6 +113,14 @@ public class DirUtils {
         validate(target);
         Files.walkFileTree(target,new FunctionVisitor(function));
     }
+
+    /**
+     * Traverses the directory structure and will only copy sub-tree structures where the provided predicate is true
+     * @param from
+     * @param to
+     * @param predicate
+     * @throws IOException
+     */
     
     public static void copyWithPredicate(Path from, Path to, Predicate<Path> predicate) throws IOException{
         validate(from);
