@@ -67,6 +67,6 @@
     </build>
 
     <properties>
-        <java.7.home>/usr/share/java/java7</java.7.home>
+        <java.7.home>/usr/share/java/java7/Contents/Home</java.7.home>
     </properties>
 </project>

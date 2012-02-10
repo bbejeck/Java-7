@@ -1,14 +1,12 @@
 package bbejeck.nio.util;
 
+import bbejeck.nio.files.directory.AsynchronousRecursiveDirectoryStream;
 import bbejeck.nio.files.visitor.*;
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 
 import java.io.IOException;
-import java.nio.file.FileVisitOption;
-import java.nio.file.FileVisitResult;
-import java.nio.file.Files;
-import java.nio.file.Path;
+import java.nio.file.*;
 import java.util.EnumSet;
 import java.util.Objects;
 
@@ -125,6 +123,18 @@ public class DirUtils {
     public static void copyWithPredicate(Path from, Path to, Predicate<Path> predicate) throws IOException{
         validate(from);
         Files.walkFileTree(from, new CopyPredicateVisitor(from,to,predicate));
+    }
+
+    /**
+     * Returns a DirectoryStream that can iterate over files found recursively based on the pattern provided
+     * @param startPath  the Directory to start from
+     * @param pattern    the glob to match against files
+     * @return   DirectoryStream
+     * @throws IOException
+     */
+    public static DirectoryStream<Path> glob(Path startPath, String pattern) throws IOException{
+        validate(startPath);
+            return new AsynchronousRecursiveDirectoryStream(startPath,pattern);
     }
     
 
