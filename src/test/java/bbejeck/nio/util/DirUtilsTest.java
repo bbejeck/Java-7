@@ -5,11 +5,7 @@ import com.google.common.base.Predicate;
 import org.junit.Before;
 import org.junit.Test;
 
-import javax.annotation.Nullable;
-import java.nio.file.FileVisitResult;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.nio.file.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -83,7 +79,7 @@ public class DirUtilsTest {
         assertAllTargetDirsExistIs(false);
         assertAllTargetFilesExistIs(false);
 
-        DirUtils.copy(sourcePath,targetPath);
+        DirUtils.copy(sourcePath, targetPath);
 
         assertAllSourceDirsExistIs(true);
         assertAllSourceFilesExistIs(true);
@@ -98,30 +94,30 @@ public class DirUtilsTest {
         assertAllTargetDirsExistIs(false);
         assertAllTargetFilesExistIs(false);
 
-        DirUtils.move(sourcePath,targetPath);
+        DirUtils.move(sourcePath, targetPath);
 
         assertAllSourceDirsExistIs(false);
         assertAllSourceFilesExistIs(false);
         assertAllTargetDirsExistIs(true);
         assertAllTargetFilesExistIs(true);
     }
-    
+
     @Test
     public void testApply() throws Exception {
-        final List <String> names = new ArrayList<>();
+        final List<String> names = new ArrayList<>();
         Function<Path, FileVisitResult> function = new Function<Path, FileVisitResult>() {
             @Override
             public FileVisitResult apply(Path path) {
-                 names.add(path.getFileName().toString()) ;
+                names.add(path.getFileName().toString());
                 return FileVisitResult.CONTINUE;
             }
         };
-        DirUtils.apply(sourcePath,function);
-        assertThat(names.size(),is(4));
-        assertThat(names.contains("file1.txt"),is(true));
-        assertThat(names.contains("file2.txt"),is(true));
-        assertThat(names.contains("file3.txt"),is(true));
-        assertThat(names.contains("file4.txt"),is(true));
+        DirUtils.apply(sourcePath, function);
+        assertThat(names.size(), is(4));
+        assertThat(names.contains("file1.txt"), is(true));
+        assertThat(names.contains("file2.txt"), is(true));
+        assertThat(names.contains("file3.txt"), is(true));
+        assertThat(names.contains("file4.txt"), is(true));
     }
 
     @Test
@@ -132,14 +128,27 @@ public class DirUtilsTest {
                 return (Files.isDirectory(input) && !input.getFileName().toString().equals("foo"));
             }
         };
-        DirUtils.copyWithPredicate(sourcePath,targetPath,copyPredicate);
+        DirUtils.copyWithPredicate(sourcePath, targetPath, copyPredicate);
         assertThat(Files.exists(targetPath), is(true));
         assertThat(Files.exists(fooPathTarget), is(false));
         assertThat(Files.exists(barPathTarget), is(false));
         assertThat(Files.exists(bazPathTarget), is(true));
     }
-    
-    
+
+    @Test
+    public void testDirectoryStream() throws Exception {
+        int expectedCount = 4;
+        int fileCount = 0;
+        try (DirectoryStream<Path> directoryStream = DirUtils.glob(sourcePath, "*.txt")) {
+            for (Path path : directoryStream) {
+                if (Files.isRegularFile(path)) {
+                    fileCount++;
+                }
+            }
+        }
+        assertThat(expectedCount, is(fileCount));
+    }
+
 
     //TODO add method to assert all files sizes are same
 
@@ -151,7 +160,7 @@ public class DirUtilsTest {
     }
 
     private void assertAllSourceDirsExistIs(boolean flag) {
-        assertThat(Files.exists(sourcePath),is(flag));
+        assertThat(Files.exists(sourcePath), is(flag));
         assertThat(Files.exists(fooPath), is(flag));
         assertThat(Files.exists(barPath), is(flag));
         assertThat(Files.exists(bazPath), is(flag));
