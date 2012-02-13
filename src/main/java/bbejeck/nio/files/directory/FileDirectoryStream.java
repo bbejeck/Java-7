@@ -77,10 +77,12 @@ public class FileDirectoryStream {
     private void findFiles(final File startDirectory, final FilenameFilter filenameFilter) {
         File[] files = startDirectory.listFiles(filenameFilter);
         for (File file : files) {
-            if (file.isDirectory()) {
-                findFiles(file, filenameFilter);
+            if (!fileTask.isCancelled()) {
+                if (file.isDirectory()) {
+                    findFiles(file, filenameFilter);
+                }
+                fileLinkedBlockingQueue.offer(file);
             }
-            fileLinkedBlockingQueue.offer(file);
         }
     }
 
