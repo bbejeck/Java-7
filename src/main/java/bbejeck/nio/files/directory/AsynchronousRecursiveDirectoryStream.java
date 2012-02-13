@@ -45,7 +45,7 @@ public class AsynchronousRecursiveDirectoryStream implements DirectoryStream<Pat
                     while (!pathTask.isDone() && path == null) {
                         path = pathsBlockingQueue.poll(5, TimeUnit.MILLISECONDS);
                     }
-                    return (path != null) ? true : false;
+                    return (path != null);
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
                 }
@@ -65,7 +65,7 @@ public class AsynchronousRecursiveDirectoryStream implements DirectoryStream<Pat
     }
 
     private void findFiles(final Path startPath, final Filter filter) {
-        pathTask = new FutureTask<Void>(new Callable<Void>() {
+        pathTask = new FutureTask<>(new Callable<Void>() {
             @Override
             public Void call() throws Exception {
                 Files.walkFileTree(startPath, new FunctionVisitor(getFunction(filter)));
