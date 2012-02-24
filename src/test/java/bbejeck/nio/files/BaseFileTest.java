@@ -35,6 +35,16 @@ public class BaseFileTest {
 
     @Before
     public void setUp() throws Exception {
+        createPaths();
+        cleanUp();
+        createDirectories();
+        generateFile(Paths.get(baseDir, fileName), 500);
+        generateFiles(basePath, fakeJavaFiles, textFileNames);
+        generateFiles(dir1Path, fakeJavaFiles);
+        generateFiles(dir2Path, fakeJavaFiles);
+    }
+
+    protected void createPaths() {
         basePath = Paths.get(baseDir);
         dir1Path = basePath.resolve(dir1);
         dir2Path = basePath.resolve(dir2);
@@ -42,12 +52,6 @@ public class BaseFileTest {
         sourcePath = basePath.resolve(fileName);
         copyPath = basePath.resolve(copyDir);
         fooPath = basePath.resolve(fooDir);
-        cleanUp();
-        createDirectories();
-        generateFile(Paths.get(baseDir, fileName), 500);
-        generateFiles(basePath, fakeJavaFiles, textFileNames);
-        generateFiles(dir1Path, fakeJavaFiles);
-        generateFiles(dir2Path, fakeJavaFiles);
     }
 
     protected void cleanUp() throws Exception {
