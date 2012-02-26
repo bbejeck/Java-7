@@ -31,7 +31,7 @@ public class DirectoryEventWatcherImpl implements DirectoryEventWatcher {
     private Path startPath;
 
 
-    public DirectoryEventWatcherImpl(EventBus eventBus, Path startPath) {
+    DirectoryEventWatcherImpl(EventBus eventBus, Path startPath) {
         this.eventBus = Objects.requireNonNull(eventBus);
         this.startPath = Objects.requireNonNull(startPath);
     }

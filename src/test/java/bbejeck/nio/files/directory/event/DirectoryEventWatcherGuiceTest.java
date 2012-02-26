@@ -1,10 +1,13 @@
 package bbejeck.nio.files.directory.event;
 
 import bbejeck.nio.files.BaseFileTest;
+import bbejeck.nio.files.event.EventModule;
 import bbejeck.nio.files.event.PathEventContext;
 import bbejeck.nio.files.event.PathEventSubscriber;
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
+import com.google.inject.Guice;
+import com.google.inject.Injector;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -19,16 +22,12 @@ import static org.junit.Assert.assertThat;
 /**
  * Created by IntelliJ IDEA.
  * User: bbejeck
- * Date: 2/20/12
- * Time: 10:32 PM
+ * Date: 2/25/12
  */
-//TODO add Test with Phaser to test adding deleting and updating
-//TODO add directory on the fly then start watching and add file confirm added to new dir
-public class DirectoryEventWatcherImplTest extends BaseFileTest {
+public class DirectoryEventWatcherGuiceTest extends BaseFileTest {
 
-    private EventBus eventBus;
-    private DirectoryEventWatcherImpl dirWatcher;
-    private CountDownLatch doneSignal;
+    private DirectoryEventWatcher directoryEventWatcher;
+    private CountDownLatch latch;
     private TestSubscriber subscriber;
 
     @Before
@@ -36,36 +35,36 @@ public class DirectoryEventWatcherImplTest extends BaseFileTest {
         createPaths();
         cleanUp();
         createDirectories();
-        eventBus = new EventBus();
-        dirWatcher = new DirectoryEventWatcherImpl(eventBus, basePath);
-        dirWatcher.start();
+        latch = new CountDownLatch(3);
+        Injector injector = Guice.createInjector(new EventModule(), new DirectoryEventModule());
+        directoryEventWatcher = injector.getInstance(DirectoryEventWatcher.class);
+        EventBus eventBus = injector.getInstance(EventBus.class);
         subscriber = new TestSubscriber();
         eventBus.register(subscriber);
-        doneSignal = new CountDownLatch(3);
+        directoryEventWatcher.start();
     }
 
     @Test
     public void testDirectoryForWrittenEvents() throws Exception {
-        Map<Path,String> eventResultsMap = new HashMap<>();
-        assertThat(dirWatcher.isRunning(), is(true));
+        Map<Path, String> eventResultsMap = new HashMap<>();
+        assertThat(directoryEventWatcher.isRunning(), is(true));
         generateFile(dir1Path.resolve("newTextFile.txt"), 10);
         generateFile(basePath.resolve("newTextFileII.txt"), 10);
         generateFile(dir2Path.resolve("newTextFileIII.txt"), 10);
-        doneSignal.await();
+        latch.await();
 
         assertThat(subscriber.pathEvents.size(), is(3));
         List<PathEventContext> eventContexts = subscriber.pathEvents;
 
         for (PathEventContext eventContext : eventContexts) {
             Path dir = eventContext.getWatchedDirectory();
-            assertThat(eventContext.getEvents().size(),is(1));
+            assertThat(eventContext.getEvents().size(), is(1));
             Path target = eventContext.getEvents().get(0).getEventTarget();
-            eventResultsMap.put(dir,target.toString());
-
+            eventResultsMap.put(dir, target.toString());
         }
 
         Set<Path> watchedDirs = eventResultsMap.keySet();
-        assertThat(watchedDirs.size(),is(3));
+        assertThat(watchedDirs.size(), is(3));
         assertThat(watchedDirs.contains(dir1Path), is(true));
         assertThat(watchedDirs.contains(basePath), is(true));
         assertThat(watchedDirs.contains(dir2Path), is(true));
@@ -76,10 +75,9 @@ public class DirectoryEventWatcherImplTest extends BaseFileTest {
 
     }
 
-
     @After
-    public void tearDown() throws Exception {
-        dirWatcher.stop();
+    public void tearDown() {
+        directoryEventWatcher.stop();
     }
 
 
@@ -90,8 +88,8 @@ public class DirectoryEventWatcherImplTest extends BaseFileTest {
         @Subscribe
         public void handlePathEvents(PathEventContext pathEventContext) {
             pathEvents.add(pathEventContext);
-            doneSignal.countDown();
+            latch.countDown();
         }
-
     }
+
 }
