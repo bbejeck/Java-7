@@ -75,6 +75,14 @@ public class DirectoryEventWatcherImplTest extends BaseFileTest {
         assertThat(eventResultsMap.get(dir2Path), is("newTextFileIII.txt"));
 
     }
+    
+    @Test
+    public void testStop() {
+        dirWatcher.stop();
+        Integer count = dirWatcher.getEventCount();
+        assertThat(count,is(0));
+        assertThat(dirWatcher.isRunning(),is(false));
+    }
 
 
     @After

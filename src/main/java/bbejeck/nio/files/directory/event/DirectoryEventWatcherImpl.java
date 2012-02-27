@@ -10,6 +10,7 @@ import java.nio.file.attribute.BasicFileAttributes;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.FutureTask;
 import java.util.concurrent.TimeUnit;
 
@@ -46,14 +47,20 @@ public class DirectoryEventWatcherImpl implements DirectoryEventWatcher {
 
     @Override
     public boolean isRunning() {
-        return watchTask != null && !watchTask.isDone() && !watchTask.isCancelled();
+        return watchTask != null && !watchTask.isDone();
     }
 
     @Override
     public void stop() {
         keepWatching = false;
-        if (watchTask != null) {
-            watchTask.cancel(true);
+    }
+
+   //Method used for testing purposes
+   Integer getEventCount() {
+        try {
+            return watchTask.get();
+        } catch (InterruptedException | ExecutionException e) {
+            throw new RuntimeException(e);
         }
     }
 
