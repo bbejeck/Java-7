@@ -1,5 +1,7 @@
 package bbejeck.nio.files.event;
 
+import bbejeck.nio.files.directory.event.PathEvent;
+
 import java.nio.file.Path;
 import java.util.List;
 

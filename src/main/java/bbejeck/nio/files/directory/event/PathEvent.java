@@ -1,4 +1,4 @@
-package bbejeck.nio.files.event;
+package bbejeck.nio.files.directory.event;
 
 import java.nio.file.Path;
 import java.nio.file.WatchEvent;
@@ -14,7 +14,7 @@ public class PathEvent {
     private Path eventTarget;
     private WatchEvent.Kind type;
 
-    public PathEvent(Path eventTarget, WatchEvent.Kind type) {
+    PathEvent(Path eventTarget, WatchEvent.Kind type) {
         this.eventTarget = eventTarget;
         this.type = type;
     }

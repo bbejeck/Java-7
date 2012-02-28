@@ -1,7 +1,5 @@
 package bbejeck.nio.files.directory.event;
 
-import bbejeck.nio.files.event.PathEvent;
-import bbejeck.nio.files.event.PathEvents;
 import com.google.common.eventbus.EventBus;
 
 import java.io.IOException;
@@ -55,7 +53,7 @@ public class DirectoryEventWatcherImpl implements DirectoryEventWatcher {
         keepWatching = false;
     }
 
-   //Method used for testing purposes
+   //Used for testing purposes
    Integer getEventCount() {
         try {
             return watchTask.get();

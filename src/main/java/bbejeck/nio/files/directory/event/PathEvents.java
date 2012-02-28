@@ -1,4 +1,7 @@
-package bbejeck.nio.files.event;
+package bbejeck.nio.files.directory.event;
+
+import bbejeck.nio.files.directory.event.PathEvent;
+import bbejeck.nio.files.event.PathEventContext;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -17,7 +20,7 @@ public class PathEvents implements PathEventContext {
     private Path watchedDirectory;
     private boolean isValid;
 
-    public PathEvents(boolean valid, Path watchedDirectory) {
+    PathEvents(boolean valid, Path watchedDirectory) {
         isValid = valid;
         this.watchedDirectory = watchedDirectory;
     }

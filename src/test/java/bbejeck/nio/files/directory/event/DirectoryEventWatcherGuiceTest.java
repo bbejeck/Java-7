@@ -1,7 +1,6 @@
 package bbejeck.nio.files.directory.event;
 
 import bbejeck.nio.files.BaseFileTest;
-import bbejeck.nio.files.event.EventModule;
 import bbejeck.nio.files.event.PathEventContext;
 import bbejeck.nio.files.event.PathEventSubscriber;
 import com.google.common.eventbus.EventBus;
@@ -36,7 +35,7 @@ public class DirectoryEventWatcherGuiceTest extends BaseFileTest {
         cleanUp();
         createDirectories();
         latch = new CountDownLatch(3);
-        Injector injector = Guice.createInjector(new EventModule(), new DirectoryEventModule());
+        Injector injector = Guice.createInjector(new DirectoryEventModule());
         directoryEventWatcher = injector.getInstance(DirectoryEventWatcher.class);
         EventBus eventBus = injector.getInstance(EventBus.class);
         subscriber = new TestSubscriber();
