@@ -11,8 +11,8 @@ import java.nio.file.WatchEvent;
  */
 
 public class PathEvent {
-    private Path eventTarget;
-    private WatchEvent.Kind type;
+    private final Path eventTarget;
+    private final WatchEvent.Kind type;
 
     PathEvent(Path eventTarget, WatchEvent.Kind type) {
         this.eventTarget = eventTarget;

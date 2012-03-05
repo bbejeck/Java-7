@@ -16,9 +16,9 @@ import java.util.List;
  */
 public class PathEvents implements PathEventContext {
 
-    private List<PathEvent> pathEvents = new ArrayList<>();
-    private Path watchedDirectory;
-    private boolean isValid;
+    private final List<PathEvent> pathEvents = new ArrayList<>();
+    private final Path watchedDirectory;
+    private final boolean isValid;
 
     PathEvents(boolean valid, Path watchedDirectory) {
         isValid = valid;
