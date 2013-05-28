@@ -23,6 +23,15 @@ public class PathsTest {
           Path path = Paths.get("src/","test/","resources/","test.txt");
           assertThat(expected,is(path.toString()));
     }
+
+    @Test
+    public void testUsrLocalIsAbsoluteTest() throws Exception {
+        Path path = Paths.get("/usr/local");
+        assertThat(path.resolve("/usr/local"),is(path));
+        assertThat(path.isAbsolute(),is(true));
+        Path resolved = path.resolve("/usr/local");
+        assertThat(resolved.isAbsolute(),is(true));
+    }
     
     @Test
     public void testPathsComparedToFileSystemPath() throws Exception {
