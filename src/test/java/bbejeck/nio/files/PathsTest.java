@@ -31,6 +31,7 @@ public class PathsTest {
         assertThat(path.isAbsolute(),is(true));
         Path resolved = path.resolve("/usr/local");
         assertThat(resolved.isAbsolute(),is(true));
+        assertThat(Paths.get("/usr/local").isAbsolute(),is(true));
     }
     
     @Test
